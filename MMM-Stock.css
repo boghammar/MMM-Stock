@@ -36,7 +36,7 @@ span.quote
 	100% {margin-top: 0}
 }
 .quotes {
-  height: 25px;
+  /*height: 25px;*/
   overflow: hidden;
   padding: 3px;
   -webkit-user-select: none
@@ -59,3 +59,24 @@ span.quote
 
 .quotes ul:hover { animation-play-state: paused }
 .quotes span:hover+ul { animation-play-state: paused }
+
+/* ----------- Marquee */
+.marquee {
+    width: 100%;
+	/*line-height: 35px;
+	background-color: black;
+	color: white;*/
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.marquee p {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 20s linear infinite;
+}
+@keyframes marquee {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+span {margin: 0 20px 0 0; }

@@ -1,9 +1,10 @@
 # MMM-Stock
-Stock prices third party module for Magic Mirror
+Stock prices third party module for Magic Mirror. This is a fork of [MMM-Stock by hakanmhmd](https://github.com/hakanmhmd/MMM-Stock)
 
-##Installing the Module
+## Installing the Module
 Navigate into your MagicMirror's modules folder and execute <br>
 `git clone https://github.com/hakanmhmd/MMM-Stock.git`
+
 ## Using the module
 
 To use this module, add it to the modules array in the `config/config.js` file:
@@ -19,8 +20,11 @@ To use this module, add it to the modules array in the `config/config.js` file:
 ````
 
 
-````css
+## Finding ticker symbols
+https://finance.yahoo.com/quote/%5EOMXSPI/?p=^OMXSPI
 
+## Other
+````css
 @keyframes ticker {
 	0%   {margin-top: 0}
 	25%  {margin-top: -30px}
