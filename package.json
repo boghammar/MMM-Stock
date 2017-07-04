@@ -1,0 +1,23 @@
+{
+  "name": "mmmstock",
+  "version": "1.0.0",
+  "description": "Stock quote module for Magic Mirror",
+  "main": "MMM-Stock.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boghammar/MMM-Stock.git"
+  },
+  "author": "anders@boghammar.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/boghammar/MMM-Stock/issues"
+  },
+  "homepage": "https://github.com/boghammar/MMM-Stock#readme",
+  "dependencies": {
+    "https-proxy-agent": "^2.0.0",
+    "url": "^0.11.0"
+  }
+}

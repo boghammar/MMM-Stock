@@ -27,18 +27,26 @@ Module.register("MMM-Stock", {
     defaults: {
         updateInterval: 60000,
         fadeSpeed: 1000,
-        companies: ['GOOG', 'YHOO'],
+        companies: ['GOOG', 'AMZN'],
         currency: 'usd',
+        animationSpeed: 60, // pixels/s
         baseURL: 'https://query.yahooapis.com/v1/public/yql',
+        showSymbolOnly: true,
+        //proxy:'http://proxy:8080'
+
     },
 
     // --------------------------------------- Define required stylesheets
     getStyles: function () {
-        return ["MMM-Stock.css"];
+        return ["MMM-Stock.css", 'font-awesome.css'];
     },
 
     // --------------------------------------- Start the module
     start: function () {
+        this.failure = undefined;
+
+        this.sendSocketNotification('CONFIG', this.config); // Send config to helper
+
         this.getStocks();
         if (this.config.currency.toLowerCase() != 'usd') {
             this.getExchangeRate();
@@ -52,6 +60,17 @@ Module.register("MMM-Stock", {
         wrapper.className = "quotes";
 
         var data = this.result;
+
+        // Show any service failures
+        if (this.failure !== undefined) {
+            var div = document.createElement("div");
+            var str = this.failure;
+            if (this.failure.statusCode !== undefined) str = 'Service returns status: ' +this.failure.statusCode
+            if (this.failure.code !== undefined) str = this.failure.syscall + ': ' +this.failure.code
+            div.innerHTML = "Service problems: " + str;
+            wrapper.appendChild(div);
+        }
+
         // the data is not ready
         if (Object.keys(data).length === 0 && data.constructor === Object) {
             return wrapper;
@@ -70,6 +89,7 @@ Module.register("MMM-Stock", {
         var marquee = document.createElement("div");
         marquee.className = 'marquee small';
         var par = document.createElement("p");
+        par.id = 'mp';
         marquee.appendChild(par);
 
         for (var i = 0; i < count; i++) {
@@ -79,20 +99,17 @@ Module.register("MMM-Stock", {
             var name = stockData.Name;
             var price = stockData.LastTradePriceOnly;
             var pChange = stockData.PercentChange;
-            var priceClass = "greenText", priceIcon = "up_green";
-            if (change < 0) {
-                priceClass = "redText";
-                priceIcon = "down_red";
-            }
-
             var html = "";
-            var priceClass = "greentext", priceIcon = "up_green";
+
+            var priceClass = "greentext", priceIcon = 'fa fa-chevron-circle-up'; //"up_green";
             if (change < 0) {
                 priceClass = "redtext";
-                priceIcon = "down_red";
+                priceIcon = 'fa fa-chevron-circle-down'; //"down_red";
             }
-            html = html + "<span class='" + priceClass + "'>";
-            html = html + "<span class='quote'>" + name + " (" + symbol + ")</span> ";
+            
+            html = html + "<span class='" + priceClass + " oneQuote'>";
+            if (this.config.showSymbolOnly) html = html + "<span class='quote'>" + symbol + "</span> ";
+            else html = html + "<span class='quote'>" + name + " (" + symbol + ")</span> ";
             if (differentCurrency) {
                 //convert between currencies
                 var exchangeRate = this.rate.query.results.rate;
@@ -103,8 +120,12 @@ Module.register("MMM-Stock", {
             } else {
                 html = html + parseFloat(price).toFixed(2) + " " + stockData.Currency;
             }
-            html = html + "<span class='" + priceIcon + "'></span>" + parseFloat(Math.abs(change)).toFixed(2) + " (";
-            html = html + (pChange == null ? 'no data' : parseFloat(Math.abs(pChange.split('%')[0])).toFixed(2) + "%)</span>");
+            html = html + " <span class='" + priceIcon + "'></span>";
+            html = html + " <span style='font-weight:bold'>"+ parseFloat(change).toFixed(2)+"</span>";
+            //html = html + "<span style='font-weight:bold'>"+ parseFloat(Math.abs(change)).toFixed(2)+"</span>";
+            html = html + " (" + (pChange == null ? 'no data' : parseFloat(pChange.split('%')[0]).toFixed(2) + "%)");
+            //html = html + " (" + (pChange == null ? 'no data' : parseFloat(Math.abs(pChange.split('%')[0])).toFixed(2) + "%)");
+            html = html + "</span>";
 
             var stock = document.createElement("span");
             stock.className = "stockTicker";
@@ -117,10 +138,37 @@ Module.register("MMM-Stock", {
 
             par.innerHTML = par.innerHTML + html;
         }
+        par.style.animationDuration = this.getAnimationDuration(par);
         //wrapper.appendChild(list);
         wrapper.appendChild(marquee);
 
+        // Set a timeout to set the animationduration, we need the styles to be applied to calculate it
+        var self = this;
+        setTimeout(function() {
+            var pm = document.getElementById('mp');
+            var dur = self.getAnimationDuration(par);
+            if (pm.style.animationDuration != dur) pm.style.animationDuration = dur;
+        }, 500);
+
         return wrapper;
+    },
+
+    // --------------------------------------- Calculate animation duration based on speed setting
+    getAnimationDuration: function (el) {
+        // From https://stackoverflow.com/questions/38315592/js-css-animation-speed-relative-to-object-size
+        var contentWidth = Math.max(
+            document.documentElement["clientWidth"],
+            document.body["scrollWidth"],
+            document.documentElement["scrollWidth"],
+            document.body["offsetWidth"],
+            document.documentElement["offsetWidth"]
+        );
+        var pixelsPerSecond = this.config.animationSpeed;
+        var pad = parseFloat(window.getComputedStyle(el, null).getPropertyValue('padding-left'));
+        var thisWidth = el.offsetWidth - pad;
+        var dur = (thisWidth+contentWidth)/pixelsPerSecond + 's';
+        Log.info("Animationspeed: "+ this.config.animationSpeed + "Animationdur: "+ dur)
+        return dur;
     },
 
     // --------------------------------------- Schedule updates
@@ -159,6 +207,13 @@ Module.register("MMM-Stock", {
             this.rate = payload;
 
         }
+        if (notification === "SERVICE_FAILURE") {
+            this.failure = payload;
+            this.updateDom(self.config.fadeSpeed);
+        } else {
+            this.failure = undefined;            
+        }
+        
     },
 
 });

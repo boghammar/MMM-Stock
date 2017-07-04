@@ -9,10 +9,12 @@ span.quote
 .greentext
 {
 	color: green;
+    color: #80FF00;
 }
 .redtext
 {
 	color: red;
+    color: #FF8000;
 }
 .up_green
 {
@@ -79,4 +81,4 @@ span.quote
     0%   { transform: translate(0, 0); }
     100% { transform: translate(-100%, 0); }
 }
-span {margin: 0 20px 0 0; }
+.oneQuote {margin: 0 20px 0 0; }
