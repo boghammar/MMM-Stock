@@ -1,11 +1,12 @@
 # MMM-Stock
-Stock prices third party module for Magic Mirror. This is a fork of [MMM-Stock by hakanmhmd](https://github.com/hakanmhmd/MMM-Stock).
+Stock prices third party module for Magic Mirror. This is a fork of [MMM-Stock by hakanmhmd](https://github.com/hakanmhmd/MMM-Stock). The main difference is that this version use a horizontal marquee, adds some mor error controls and has a slight different apperance of the quotes.
 
 The module uses the [YQL Web Service](https://developer.yahoo.com/yql/guide/yql_url.html) (Yahoo Query Language)
 
 ## Installing the Module
 * Navigate into your MagicMirror's modules folder and execute `git clone https://github.com/boghammar/MMM-Stock.git`
 * Do `npm install` in the `modules/MMM-Stock` directory
+* Update your Magic Mirror config in `config/config.js`
 
 ## Using the module
 
