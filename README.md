@@ -5,7 +5,7 @@ The module uses the [YQL Web Service](https://developer.yahoo.com/yql/guide/yql_
 
 ## Installing the Module
 * Navigate into your MagicMirror's modules folder and execute `git clone https://github.com/boghammar/MMM-Stock.git`
-* Do `npm install` in the modules/MMM-Stock` directory
+* Do `npm install` in the `modules/MMM-Stock` directory
 
 ## Using the module
 
@@ -26,5 +26,5 @@ To use this module, add it to the modules array in the `config/config.js` file:
 
 
 ## Finding ticker symbols
-Go to this url [https://finance.yahoo.com/quote/%5EOMXSPI/?p=^OMXSPI}(https://finance.yahoo.com/quote/%5EOMXSPI/?p=^OMXSPI) and enter what you search for in the search field.
+Go to this url [https://finance.yahoo.com/quote/%5EOMXSPI/?p=^OMXSPI](https://finance.yahoo.com/quote/%5EOMXSPI/?p=^OMXSPI) and enter what you search for in the search field.
 
